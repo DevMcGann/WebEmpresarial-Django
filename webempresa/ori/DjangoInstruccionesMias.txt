@@ -1,0 +1,68 @@
+1- ir al directorio,  activate django2 (o como se llame el entorno virtual).
+2- django-admin startproject nombreprojecto
+3- abrir manage.py y seleccionar el entorno (django2), click derech en manage.py y run in terminal 
+4- python manage.py startapp core  (Creamos la app)
+
+5- dentro de core/views creamos las vistas que tendra esta app:
+	from django.shortcuts import render,HttpResponse
+
+	# Create your views here.
+
+	def home(request):
+    		return HttpResponse("Inicio")
+6- url.py (en el raiz) y editar las rutas, se puede hacer url en la app y despues importar el.py e las url en el url.py de la carpeta del pryecto.
+
+7-identificar las partes comunes de los htlms y crear las carpetas core/templates/core y core/static/core
+pegar los html del Front en templates/core y los archivos media en static/core tambien los css img vendor js y demas que son comunes para todos
+
+8- ACTIVAR la app en settings.py por ejemplo 'core' y en views cambiar el httpresponse por el render return render (request,"core/home.html")
+
+9- editar ls html con block y demas 
+
+-----10
+Las apps que req interactuar cn BD necesitan modelo, crear modelo. 
+
+  1- configurar los ficheros MEDIA para que funcionen en el srv de desarrollo.  Creamos en la raiz una carpeta llamada media
+  2- is a settings.py y configurar la dir de los fich media: #ficheros media
+		MEDIA_URL='/media/'
+		MEDIA_ROOT= os.path.join(MEDIA_URL,'media')
+  FInalmente en urls.py importar django.conf import settings y abajo del urlpatterns incluir:
+	if settings.DEBUG:
+    		from django.conf.urls.static import static
+    		urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) 
+----------------------------
+
+11- python manage.py startapp services y en settings añadir'services' a las apps.
+
+12- crear el modelo (ver ejemplos)
+
+13-Migrar: python manage.py makemigrations y manage.py migrate y createsuperuser
+
+14- admin.py  importar el modelo from .models import Service
+crear la clase de conf para el admin
+
+class ServiceAdmin(admin.ModelAdmin):
+    readonly_fields= ('created','updated')
+
+admin.site.register(Service,ServiceAdmin)
+
+------------------------------------
+
+VSTA Y TEMPLATE
+
+1-crear la carpeta templates dentro de la APP (services)/services y arrastrar el services.html a la carpeta. tambien crear urls.py en services
+
+2- quitar la vista de views (de services) y pegarla en el views de services.  cpiar url.py y pegar en url.py de services, quitar td, dejar sol la url de srvs
+y dejar en la raiz ''/view.services...babla y añadir en el url raiz path('/services',include('services.urls'))
+
+3- para mostrar los modelos en la vista, importar el modelo 
+# Create your views here.
+def Services(request):
+    servicios = services.objects.all()
+    return render (request,"services/services.html",{'Services':servicios})
+4-y entonces en el tmplate srvices hacer el bucle for para que recorra la bd
+
+
+
+
+
